@@ -1,11 +1,11 @@
 var conf = {
     FPS: 30,
     baseHP: 10,
-    baseEHP: 8,
+    baseEHP: 4,
     baseSPT: 6000,
-    baseSPD: 2500,
-    baseENE: 0.5,
-    increaseDifficultyEvery: 10,
+    baseSPD: 5000,
+    baseENE: 2,
+    increaseDifficultyEvery: 15,
     baseAmmo: 5,
     baseAAmmo: 3,
     shootSPD: 700,
@@ -396,7 +396,7 @@ function togglePause() {
         t.particleTimer = setInterval(particleGenerator,100);
         t.spawnTimer = setInterval(spawnEnemy,session.spawnSpeed);
         t.shootTimer = setInterval(enemyShoot,session.enemiesFireSPD);
-        t.bossTimer = setInterval(bossShoot,400);
+        t.bossTimer = setInterval(bossShoot,200);
         t.shooterTimer = setInterval(playerShoot, session.shootSPD);
         t.packSpawn = setInterval(spawnPup, conf.packPeriod);
         session.isPlaying = true;
@@ -573,7 +573,7 @@ function playerShoot() {
         switch (session.player.weaponType) {
             case 1:
                 shells = [
-                    new Bullet(session.player.x + session.player.width, session.player.y + session.player.height / 2).setVelocity(40, 0).setColor('#0f0')
+                    new Bullet(session.player.x + session.player.width, session.player.y + session.player.height / 2).setVelocity(20, 0).setColor('#0f0')
                 ];
                 session.entities.bullets = session.entities.bullets.concat(shells);
                 break;

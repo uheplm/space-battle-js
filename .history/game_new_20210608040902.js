@@ -1,17 +1,16 @@
 var conf = {
     FPS: 30,
-    baseHP: 10,
-    baseEHP: 8,
-    baseSPT: 6000,
-    baseSPD: 2500,
-    baseENE: 0.5,
+    baseHP: 15,
+    baseEHP: 4,
+    baseSPT: 4000,
+    baseSPD: 5000,
+    baseENE: 2,
     increaseDifficultyEvery: 10,
     baseAmmo: 5,
     baseAAmmo: 3,
-    shootSPD: 700,
-    spdmod: 1.02,
-    packPeriod: 30000,
-    maxOnScreen: 3
+    shootSPD: 500,
+    spdmod: 1.25,
+    packPeriod: 15000
 }
 
 var session = {
@@ -36,8 +35,7 @@ var session = {
     enemiesEvasion: conf.baseENE,
     ammo: conf.baseAmmo,
     abilityAmmo: conf.baseAAmmo,
-    shootSPD: conf.shootSPD,
-    maxOnScreen: conf.maxOnScreen
+    shootSPD: conf.shootSPD
 }
 var resources = {
     playerShip: loadImage('ship.png'),
@@ -198,12 +196,12 @@ class Player{
             session.ctx.fillRect(50+15*i,10,10,20); 
         }
         session.ctx.fillStyle = '#fff';
-        // for (var i = 0; i < this.ammo; i++) {
-        //     session.ctx.fillRect(50+15*i,40,10,20); 
-        // }
+        for (var i = 0; i < this.ammo; i++) {
+            session.ctx.fillRect(50+15*i,40,10,20); 
+        }
         session.ctx.fillStyle = '#FF7000';
         for (var i = 0; i < this.abilityAmmo; i++) {
-            session.ctx.fillRect(50+15*i,40,10,20); 
+            session.ctx.fillRect(50+15*i,70,10,20); 
         }
         session.canvas.style.cursor = 'crosshair';
         session.ctx.font = 'bold 75px monospace';
@@ -213,8 +211,8 @@ class Player{
         session.ctx.fillText(session.score, session.canvas.width-50, 50);
         session.ctx.font = 'bold 25px monospace';
         session.ctx.fillText(this.hp, 40, 10);
-        // session.ctx.fillText(this.ammo, 40, 40);
-        session.ctx.fillText(this.abilityAmmo, 40, 40);
+        session.ctx.fillText(this.ammo, 40, 40);
+        session.ctx.fillText(this.abilityAmmo, 40, 70);
         return this;
     }
 }
@@ -347,7 +345,7 @@ function init(canvas){
     session.canvas.height = window.innerHeight;
 
     document.onmousemove = playerMove;
-    // document.onmousedown = playerShoot;
+    document.onmousedown = playerShoot;
 
     session.player = new Player(100,window.innerHeight/2);
     session.player.setHp(conf.baseHP);
@@ -396,13 +394,13 @@ function togglePause() {
         t.particleTimer = setInterval(particleGenerator,100);
         t.spawnTimer = setInterval(spawnEnemy,session.spawnSpeed);
         t.shootTimer = setInterval(enemyShoot,session.enemiesFireSPD);
-        t.bossTimer = setInterval(bossShoot,400);
+        t.bossTimer = setInterval(bossShoot,200);
         t.shooterTimer = setInterval(playerShoot, session.shootSPD);
         t.packSpawn = setInterval(spawnPup, conf.packPeriod);
         session.isPlaying = true;
 
         document.onmousemove = playerMove;
-        // document.onmousedown = playerShoot;
+        document.onmousedown = playerShoot;
 
         session.canvas.style.cursor = 'none';
     }
@@ -459,19 +457,17 @@ function mapGenerator(){
 
 function playerMove(e){
     if(e.clientY > 0 && e.clientY < session.canvas.height) session.player.y = e.clientY - 25;
-    if(e.clientX > 0 && e.clientX < session.canvas.width) session.player.x = session.canvas.width/5  ;
+    if(e.clientX > 0 && e.clientX < session.canvas.width) session.player.x = e.clientX - 25;
 }
 
 function spawnEnemy(){
-    if(session.entities.enemies.length < session.maxOnScreen){
-        newEnemy = new Enemy(
-            session.canvas.width - session.canvas.width / 20,
-            randInt(75,session.canvas.height-75),
-            randInt(1,5)
-        );
-        newEnemy.setHp(session.enemiesHP);
-        session.entities.enemies.push(newEnemy);
-        }
+    newEnemy = new Enemy(
+        session.canvas.width - session.canvas.width / 20,
+        randInt(75,session.canvas.height-75),
+        randInt(1,5)
+    );
+    newEnemy.setHp(session.enemiesHP);
+    session.entities.enemies.push(newEnemy);
 }
 
 function particleGenerator(){
@@ -573,7 +569,7 @@ function playerShoot() {
         switch (session.player.weaponType) {
             case 1:
                 shells = [
-                    new Bullet(session.player.x + session.player.width, session.player.y + session.player.height / 2).setVelocity(40, 0).setColor('#0f0')
+                    new Bullet(session.player.x + session.player.width, session.player.y + session.player.height / 2).setVelocity(10, 0).setColor('#0f0')
                 ];
                 session.entities.bullets = session.entities.bullets.concat(shells);
                 break;
@@ -837,12 +833,11 @@ function spawnPup() {
 }
 function increaseDifficulty() {
     session.enemiesHP++;
-    session.maxOnScreen+=2;
-    session.spawnSpeed -= session.spawnSpeed > 100 ? 250 : 0;
+    session.spawnSpeed -= session.spawnSpeed > 100 ? 200 : 0;
     session.enemiesFireSPD -= session.enemiesFireSPD ? 150 : 0;
     session.enemiesEvasion += 0.5;
     session.player.abilityAmmo++;
-    // session.ammo+=5;
+    session.ammo+=5;
     clearInterval(t.spawnTimer);
     clearInterval(t.shootTimer);
     t.spawnTimer = setInterval(spawnEnemy,session.spawnSpeed);

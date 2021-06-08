@@ -4,7 +4,7 @@ var conf = {
     baseEHP: 8,
     baseSPT: 6000,
     baseSPD: 2500,
-    baseENE: 0.5,
+    baseENE: 2,
     increaseDifficultyEvery: 10,
     baseAmmo: 5,
     baseAAmmo: 3,

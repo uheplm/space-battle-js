@@ -3,8 +3,8 @@ var conf = {
     baseHP: 10,
     baseEHP: 8,
     baseSPT: 6000,
-    baseSPD: 2500,
-    baseENE: 0.5,
+    baseSPD: 5000,
+    baseENE: 2,
     increaseDifficultyEvery: 10,
     baseAmmo: 5,
     baseAAmmo: 3,
@@ -396,7 +396,7 @@ function togglePause() {
         t.particleTimer = setInterval(particleGenerator,100);
         t.spawnTimer = setInterval(spawnEnemy,session.spawnSpeed);
         t.shootTimer = setInterval(enemyShoot,session.enemiesFireSPD);
-        t.bossTimer = setInterval(bossShoot,400);
+        t.bossTimer = setInterval(bossShoot,200);
         t.shooterTimer = setInterval(playerShoot, session.shootSPD);
         t.packSpawn = setInterval(spawnPup, conf.packPeriod);
         session.isPlaying = true;
